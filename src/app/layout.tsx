@@ -4,6 +4,7 @@ import "@/globals.css";
 import ReactQueryProvider from "@/lib/react-query";
 import StyledComponentsRegistry from "@/lib/styled-components";
 import { GlobalProvider } from "@/globalContext";
+import Navbar from "@/components/Navbar";
 
 const geistSans = localFont({
     src: "../fonts/GeistVF.woff",
@@ -31,7 +32,9 @@ export default function RootLayout({
             <body className={`${geistSans.variable} ${geistMono.variable}`}>
                 <ReactQueryProvider>
                     <StyledComponentsRegistry>
-                        <GlobalProvider>{children}</GlobalProvider>
+                        <GlobalProvider>
+                            {children}
+                        </GlobalProvider>
                     </StyledComponentsRegistry>
                 </ReactQueryProvider>
             </body>

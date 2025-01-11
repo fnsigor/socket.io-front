@@ -1,6 +1,7 @@
-'use server'
-import { API } from '@/constants'
+"use server"
 import { getCookie } from '@/actions/cookies'
+import { API } from '@/constants'
+import { redirect } from 'next/navigation'
 
 const METHODS = {
   GET: 'GET',
@@ -17,51 +18,44 @@ type TypeResponse = { data?: any, error?: any }
 
 
 
-async function normalRequest(method: TypeMethods, endpoint: string, body?: TypeBody): Promise<TypeResponse> {
+export async function request(method: TypeMethods, endpoint: string, body?: TypeBody): Promise<TypeResponse> {
 
   try {
-    // const token = await getCookie('_advertiser.token')
 
-    // if (!token) {
-    //   return {
-    //     error: {
-    //       name: "INVALID_TOKEN",
-    //       message: "Token can't be null",
-    //       statusCode: 401
-    //     }
-    //   }
-    // }
+    let authCookie = ""
+    const cookie = await getCookie("token")
+
+    if (cookie) {
+      authCookie = cookie
+    }
 
     const response = await fetch(`${API}${endpoint}`, {
       method,
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${token}`
+        "Authorization": `Bearer ${authCookie}`
       },
       body: JSON.stringify(body),
     })
 
     const data = await response.json() as TypeResponse
 
-    if (!data) {
-      throw new Error('Invalid response')
-    }
-
     return data
 
-  } catch (e) {
-    return {
-      error: {
-        name: "BAD_REQUEST",
-        message: "Bad request conection",
-        statusCode: 520
+  } catch (e: any) {
+    if (e.error) {
+      return {
+        error: e.error
       }
+    }
+    return {
+      error: "Bad request conection"
     }
   }
 }
 
-async function reactQuery(method: TypeMethods, endpoint: string, body?: TypeBody): Promise<{ data: any } | void> {
-  const response = await normalRequest(method, endpoint, body)
+export async function reactQueryRequest(method: TypeMethods, endpoint: string, body?: TypeBody): Promise<any | void> {
+  const response = await request(method, endpoint, body)
 
   if (response.error) {
     throw new Error(JSON.stringify(response.error))
@@ -69,7 +63,3 @@ async function reactQuery(method: TypeMethods, endpoint: string, body?: TypeBody
 
   return response.data
 }
-
-normalRequest.reactQuery = reactQuery
-
-export const request = normalRequest
