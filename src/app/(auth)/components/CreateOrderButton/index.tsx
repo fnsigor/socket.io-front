@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "antd";
 import { Wrapper } from "./styled";
-import { useAllOrders } from "@/app/(after-login)/context";
+import { useAllOrders } from "@/app/(auth)/context";
 
 const CreateOrderButton: React.FC = () => {
     const { setIsModalCreateOrderOpen } = useAllOrders();
