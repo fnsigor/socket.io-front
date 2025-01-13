@@ -10,37 +10,35 @@ import { removeAllCookies, setCookie } from "@/actions/cookies";
 const LoginForm = () => {
     const [form] = Form.useForm();
     const [isLoading, setIsLoading] = useState(false);
-    const { handleMessage } = useGlobal();
-    const router = useRouter()
-
-    
+    const { handleMessage, socketInstance } = useGlobal();
+    const router = useRouter();
 
     const handleSubmit = async () => {
         try {
-
             setIsLoading(true);
 
-            await removeAllCookies()
+            await removeAllCookies();
 
-            const {email, password} = form.getFieldsValue(true) as {email: string, password: string}
+            const { email, password } = form.getFieldsValue(true) as {
+                email: string;
+                password: string;
+            };
 
-
-            const response = await login(email, password)
+            const response = await login(email, password);
 
             if (response.error) {
-                handleMessage(
-                    "error",
-                    response.error
-                );
+                handleMessage("error", response.error);
             }
 
             if (response.data) {
                 await setCookie("token", response.data.token);
-                router.push("/")
+                await setCookie("username", response.data.name);
+                // Registrar o usuário no servidor via socket
+                socketInstance.emit("register", response.data.id);
+                router.push("/");
             }
-
         } catch (error) {
-            await removeAllCookies()
+            await removeAllCookies();
             handleMessage("error", "Erro ao fazer login. Consulte o suporte!");
         } finally {
             setIsLoading(false);

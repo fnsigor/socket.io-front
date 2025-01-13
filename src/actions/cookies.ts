@@ -11,4 +11,5 @@ export async function getCookie(name: string) {
 
 export async function removeAllCookies() {
   cookies().delete('token')
+  cookies().delete('username')
 }

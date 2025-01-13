@@ -1,7 +1,9 @@
 "use server"
 import { API } from "@/constants"
 
-type TypeResponse = { data?: any, error?: any }
+import { ILoginResponse } from "@/interfaces/ILoginResponse"
+
+type TypeResponse = { data?: ILoginResponse, error?: string }
 
 
 export async function login(email: string, password: string): Promise<TypeResponse> {

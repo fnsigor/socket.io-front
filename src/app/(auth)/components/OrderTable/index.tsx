@@ -1,10 +1,7 @@
 "use client";
-import React from "react";
-import type { IOrder } from "@/interfaces/IOrder";
-import { Space, Table, Tag, message } from "antd";
+import { Table, Tag } from "antd";
 import type { TableProps } from "antd";
 import { useQuery } from "@tanstack/react-query";
-import { reactQueryRequest, request } from "@/api/server";
 import { getOrders } from "./actions";
 
 interface Order {
@@ -35,7 +32,7 @@ const columns: TableProps<Order>["columns"] = [
         render: (Pizza) => <>{Pizza.name}</>,
     },
     {
-        title: "Valor unitário",
+        title: "Valor Unitário",
         dataIndex: "Pizza",
         render: (Pizza) => <>{Pizza.price}</>,
     },
@@ -44,8 +41,13 @@ const columns: TableProps<Order>["columns"] = [
         dataIndex: "quantity",
     },
     {
-        title: "Total do pedido",
+        title: "Total do Pedido",
         dataIndex: "totalValue",
+    },
+    {
+        title: "Status do Pedido",
+        dataIndex: "OrderStatus",
+        render: ({ name }) => <Tag>{name}</Tag>,
     },
 ];
 
