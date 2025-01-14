@@ -73,7 +73,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     useEffect(() => {
-        console.log("instancia do socket mudou", )
         socketInstance.on("connect", () => {
             setIsConnected(true);
         });

@@ -58,6 +58,7 @@ const OrderTable: React.FC = () => {
         staleTime: 1000 * 60 * 5,
     });
 
+
     return (
         <>
             {isPending && <p>carregando...</p>}
